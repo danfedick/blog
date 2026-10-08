@@ -94,21 +94,21 @@ table.c-table{display:table;width:100%;border-collapse:collapse;overflow:visible
 .kv dd.muted{color:var(--ink-2)}
 
 /* post page */
-.postgrid{display:grid;grid-template-columns:minmax(0,740px) 250px;gap:48px;justify-content:center}
-.postgrid.no-rail{grid-template-columns:minmax(0,740px)}
+.postgrid{display:grid;grid-template-columns:minmax(0,1fr) clamp(250px,18vw,320px);gap:clamp(28px,3vw,48px)}
+.postgrid.no-rail{grid-template-columns:minmax(0,1fr)}
 .postcol{min-width:0}
-.art{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:44px 52px 48px}
+.art{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:clamp(28px,3.2vw,64px) clamp(24px,4vw,80px) 48px}
 .art-page{margin-bottom:22px;padding:28px 32px}
-.console .art h1{font-family:var(--display);font-variation-settings:"wdth" 112,"wght" 800;font-size:40px;line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:14px 0 16px}
+.console .art h1{font-family:var(--display);font-variation-settings:"wdth" 112,"wght" 800;font-size:clamp(32px,2.6vw,52px);line-height:1.08;letter-spacing:-.022em;color:var(--ink);margin:14px 0 16px}
 .art > h1:first-child{margin-top:0}
-.art .lede{font-size:18px;line-height:1.6;color:var(--ink-2);margin:0 0 24px}
+.art .lede{font-size:clamp(17px,1.15vw,22px);line-height:1.6;color:var(--ink-2);margin:0 0 24px}
 .metabar{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;margin-bottom:36px;background:var(--bg-2)}
 .metabar div{padding:10px 16px;border-right:1px solid var(--line)}
 .metabar div:last-child{border-right:0}
 .metabar span{display:block;letter-spacing:.06em;text-transform:uppercase;color:var(--stone);font-size:10px;font-weight:650}
 .metabar b{font-family:var(--mono);font-size:13px;color:var(--ink);font-weight:500}
 
-.prose{font-size:17px;line-height:1.7;color:var(--ink);counter-reset:sec}
+.prose{font-size:clamp(16px,calc(9px + .55vw),20px);line-height:1.7;color:var(--ink);counter-reset:sec}
 .prose p{margin:0 0 1.15em}
 .prose a{color:var(--ink);border-bottom:2px solid var(--accent)}
 .prose a:hover{background:var(--accent);color:var(--on-accent)}
