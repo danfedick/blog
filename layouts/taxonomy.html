@@ -1,0 +1,15 @@
+{{- /* Taxonomy index (e.g. /tags/) as topic chips with counts. */ -}}
+{{- define "main" }}
+{{- $cfg := site.Params.console }}
+<div class="crumb">
+    <div class="path"><a href="{{ "" | relURL }}">{{ $cfg.host | default (urls.Parse site.BaseURL).Host }}</a> / <b>{{ .Title | lower }}</b></div>
+</div>
+<section class="pane">
+    <div class="pane-h"><h2>{{ .Title }}</h2><span>{{ len .Data.Terms }} total</span></div>
+    <div class="tagcloud tagcloud-lg">
+        {{- range .Data.Terms.ByCount }}
+        <a class="tag" href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }} <b>{{ .Count }}</b></a>
+        {{- end }}
+    </div>
+</section>
+{{- end }}

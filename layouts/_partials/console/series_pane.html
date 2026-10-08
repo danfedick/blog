@@ -1,0 +1,21 @@
+{{- /* Series progress from site.Params.console.series. Published parts are pages in the
+       `series` taxonomy with a matching `seriesPart`; the rest render as non-linked "coming soon". */ -}}
+{{- range site.Params.console.series }}
+{{- $name := .name }}
+{{- $parts := .parts }}
+{{- $published := where site.RegularPages "Params.series" "intersect" (slice $name) }}
+<section class="pane">
+    <div class="pane-h"><h2>Series · {{ $name }}</h2><span>{{ len $published }} of {{ len $parts }} published</span></div>
+    <ul class="steps">
+        {{- range $i, $title := $parts }}
+        {{- $n := add $i 1 }}
+        {{- $page := index (where $published "Params.seriesPart" $n) 0 }}
+        {{- with $page }}
+        <li><span class="mk ok" aria-label="Published">✓</span><a class="st" href="{{ .RelPermalink }}">Part {{ $n }} · {{ .Title }}<small>{{ .Date.Format "2006-01-02" }} · {{ .ReadingTime }} min</small></a></li>
+        {{- else }}
+        <li><span class="mk q" aria-label="Coming soon">?</span><span class="st">Part {{ $n }} · {{ $title }}<small>coming soon</small></span></li>
+        {{- end }}
+        {{- end }}
+    </ul>
+</section>
+{{- end }}

@@ -1,0 +1,20 @@
+{{- /* Option C "Console" shell: fixed sidebar + main column. Replaces PaperMod's baseof. */ -}}
+<!DOCTYPE html>
+<html lang="{{ site.Language }}" dir="{{ .Language.Direction | default "auto" }}" data-theme="dark">
+
+<head>
+    {{- partial "head.html" . }}
+</head>
+
+<body id="top" class="console">
+    {{- partial "console/mtop.html" . }}
+    <div class="shell">
+        {{- partial "console/sidebar.html" . }}
+        <main class="c-main">
+            {{- block "main" . }}{{ end }}
+        </main>
+    </div>
+    {{- partial "console/scripts.html" . }}
+</body>
+
+</html>

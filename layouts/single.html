@@ -1,0 +1,66 @@
+{{- /* Option C post page: article card + sticky rail (On this page, Tags). Also used for /about/. */ -}}
+{{- define "main" }}
+{{- $cfg := site.Params.console }}
+{{- $host := $cfg.host | default (urls.Parse site.BaseURL).Host }}
+{{- $isPost := not (.Param "hideMeta") }}
+{{- $toc := slice }}
+{{- if and $isPost (.Param "ShowToc") }}
+{{- $toc = partial "console/toc_items.html" (dict "headings" .Fragments.Headings "acc" slice) }}
+{{- end }}
+<div class="crumb">
+    <div class="path"><a href="{{ "" | relURL }}">{{ $host }}</a>
+        {{- with .Section }} / <a href="{{ printf "/%s/" . | relURL }}">{{ . }}</a>{{ end }} / <b>{{ .File.ContentBaseName | default (.Title | urlize) }}</b></div>
+</div>
+<div class="postgrid{{ if not $toc }} no-rail{{ end }}">
+    <div class="postcol">
+        <article class="art">
+            {{- if $isPost }}{{ partial "console/kicker.html" (dict "page" . "seriesOnly" false) }}{{ end }}
+            <h1>{{ .Title }}</h1>
+            {{- with .Description }}<p class="lede">{{ . }}</p>{{ end }}
+            {{- if $isPost }}
+            <div class="metabar">
+                <div><span>Published</span><b>{{ .Date.Format "2006-01-02" }}</b></div>
+                <div><span>Reading</span><b>{{ .ReadingTime }} min</b></div>
+                <div><span>Words</span><b>{{ lang.FormatNumber 0 .WordCount }}</b></div>
+                <div><span>Author</span><b>{{ partial "author.html" . }}</b></div>
+            </div>
+            {{- end }}
+            <div class="prose">{{ .Content }}</div>
+        </article>
+        {{- if and $isPost (.Param "ShowPostNavLinks") }}
+        {{- /* In Hugo, PrevInSection is the older post and NextInSection the newer one. */}}
+        {{- $prev := .PrevInSection }}
+        {{- $next := .NextInSection }}
+        <nav class="pn" aria-label="More posts">
+            {{- with $prev }}<a href="{{ .RelPermalink }}"><span>← Previous</span><b>{{ .Title }}</b></a>
+            {{- else }}<div class="pn-none"><span>← Previous</span><b>None, this is the first post</b></div>{{ end }}
+            {{- with $next }}<a class="pn-next" href="{{ .RelPermalink }}"><span>Next →</span><b>{{ .Title }}</b></a>
+            {{- else }}<div class="pn-none pn-next"><span>Next →</span><b>Nothing newer yet</b></div>{{ end }}
+        </nav>
+        {{- end }}
+    </div>
+    {{- if $toc }}
+    <aside class="rail">
+        <section class="pane">
+            <div class="pane-h"><h2>On this page</h2></div>
+            <ul class="c-toc">
+                {{- $n := 0 }}
+                {{- range $toc }}
+                {{- if eq .level 2 }}{{ $n = add $n 1 }}
+                <li><a href="#{{ .id }}"><span class="num">{{ printf "%02d" $n }}</span>{{ .title }}</a></li>
+                {{- else }}
+                <li class="sub"><a href="#{{ .id }}">{{ .title }}</a></li>
+                {{- end }}
+                {{- end }}
+            </ul>
+        </section>
+        {{- with .GetTerms "tags" }}
+        <section class="pane">
+            <div class="pane-h"><h2>Tags</h2></div>
+            <div class="tagcloud pad">{{ range . }}<a class="tag" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}</div>
+        </section>
+        {{- end }}
+    </aside>
+    {{- end }}
+</div>
+{{- end }}

@@ -1,0 +1,62 @@
+{{- /* Option C sidebar: profile, socials, menu with counts, topic chips. */ -}}
+{{- $hip := site.Params.homeInfoParams }}
+{{- $cfg := site.Params.console }}
+{{- $posts := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $tags := site.Taxonomies.tags }}
+<aside class="side">
+    <a class="me" href="{{ "" | absURL }}">
+        {{- with $hip.Image }}<img src="{{ . | absURL }}" alt="{{ site.Params.author }}" width="64" height="64">{{ end }}
+        <div>
+            <div class="side-name">{{ $hip.Title | default site.Title }}</div>
+            <div class="role">{{ $cfg.role }}</div>
+        </div>
+    </a>
+    {{- with $hip.Content }}
+    <div class="bio">{{ . | $.Page.RenderString }}</div>
+    {{- end }}
+    <div class="acts">
+        {{- partial "console/socials.html" . }}
+        {{- with $cfg.contact }}
+        <a class="btn" href="{{ .url }}" rel="noopener" target="_blank">{{ .name }} ↗</a>
+        {{- end }}
+    </div>
+    <div>
+        <span class="lbl">Navigate</span>
+        <nav class="navl" aria-label="Main">
+            {{- range site.Menus.main }}
+            {{- $url := .URL }}
+            {{- $external := strings.HasPrefix $url "http" }}
+            {{- $on := false }}
+            {{- if eq .Identifier "posts" }}{{ $on = or $.IsHome (and (eq $.Section "posts") (ne $.Kind "taxonomy") (ne $.Kind "term")) }}{{ end }}
+            {{- if eq .Identifier "tags" }}{{ $on = or (eq $.Kind "taxonomy") (eq $.Kind "term") }}{{ end }}
+            {{- if and (not $external) (not $on) (ne .Identifier "posts") (ne .Identifier "tags") }}{{ $on = eq $.RelPermalink (relURL $url) }}{{ end }}
+            <a href="{{ if $external }}{{ $url }}{{ else }}{{ $url | relURL }}{{ end }}"{{ if $on }} class="on" aria-current="page"{{ end }}{{ if $external }} rel="noopener" target="_blank"{{ end }}>{{ .Name }}
+                {{- if eq .Identifier "posts" }} <span>{{ len $posts }}</span>
+                {{- else if eq .Identifier "tags" }} <span>{{ len $tags }}</span>
+                {{- else if strings.HasSuffix $url ".xml" }} <span>xml</span>
+                {{- else if $external }} <span>↗</span>
+                {{- end }}</a>
+            {{- end }}
+        </nav>
+    </div>
+    {{- with $tags }}
+    <div>
+        <span class="lbl">Topics</span>
+        <div class="tagcloud">
+            {{- if $cfg.topics }}
+            {{- /* Curated order from params.console.topics; unknown tags are skipped. */}}
+            {{- range $cfg.topics }}
+            {{- with index $tags (lower .) }}
+            <a class="tag" href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }} <b>{{ .Count }}</b></a>
+            {{- end }}
+            {{- end }}
+            {{- else }}
+            {{- range first ($cfg.sidebarTopics | default 8) .ByCount }}
+            <a class="tag" href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }} <b>{{ .Count }}</b></a>
+            {{- end }}
+            {{- end }}
+        </div>
+    </div>
+    {{- end }}
+    <div class="foot">{{ delimit $cfg.footer "<br>" | safeHTML }}</div>
+</aside>

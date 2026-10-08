@@ -1,0 +1,18 @@
+{{- /* Section and term lists (e.g. /posts/, /tags/pqc/, /series/...) as a Console table. */ -}}
+{{- define "main" }}
+{{- $cfg := site.Params.console }}
+{{- $host := $cfg.host | default (urls.Parse site.BaseURL).Host }}
+<div class="crumb">
+    <div class="path"><a href="{{ "" | relURL }}">{{ $host }}</a>
+        {{- if eq .Kind "term" }} / <a href="{{ .Parent.RelPermalink }}">{{ .Parent.Data.Plural | default .Parent.Title | lower }}</a>{{ end }} / <b>{{ .Title | lower }}</b></div>
+    {{- with .OutputFormats.Get "rss" }}
+    <div class="filters"><a class="f" href="{{ .RelPermalink }}">RSS</a></div>
+    {{- end }}
+</div>
+{{- with .Content }}
+<article class="art art-page"><div class="prose">{{ . }}</div></article>
+{{- end }}
+{{- $pages := .RegularPages }}
+{{- if eq .Kind "term" }}{{ $pages = .Pages }}{{ end }}
+{{- partial "console/post_table.html" (dict "pages" $pages "title" .Title) }}
+{{- end }}

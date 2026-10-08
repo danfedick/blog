@@ -1,0 +1,9 @@
+{{- /* Compact top bar shown under 900px instead of the sidebar. */ -}}
+{{- $hip := site.Params.homeInfoParams }}
+<header class="mtop">
+    <a href="{{ "" | absURL }}" class="mtop-me">
+        {{- with $hip.Image }}<img src="{{ . | absURL }}" alt="" width="38" height="38">{{ end }}
+        <div><b>{{ $hip.Title | default site.Title }}</b><span class="role">{{ site.Params.console.role }}</span></div>
+    </a>
+    <div class="acts">{{ partial "console/socials.html" . }}</div>
+</header>

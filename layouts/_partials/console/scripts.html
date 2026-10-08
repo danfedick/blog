@@ -1,0 +1,27 @@
+{{- /* First-party only: code Copy buttons and TOC scroll-spy. No third-party scripts. */ -}}
+<script>
+document.querySelectorAll('figure.code .copy').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var code = b.closest('figure').querySelector('pre code');
+    if (!code || !navigator.clipboard) return;
+    navigator.clipboard.writeText(code.innerText).then(function () {
+      b.textContent = 'Copied';
+      setTimeout(function () { b.textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.c-toc a[href^="#"]'));
+  if (!links.length) return;
+  var heads = links.map(function (a) { return document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1))); });
+  var ticking = false;
+  var update = function () {
+    ticking = false;
+    var idx = 0;
+    heads.forEach(function (h, i) { if (h && h.getBoundingClientRect().top < 140) idx = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === idx); });
+  };
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();
+</script>

@@ -1,0 +1,33 @@
+{{- define "main" }}
+{{- $cfg := site.Params.console }}
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" }}
+{{- $tags := site.Taxonomies.tags }}
+<div class="crumb">
+    <div class="path">{{ $cfg.host | default (urls.Parse site.BaseURL).Host }} / <b>posts</b></div>
+    <nav class="filters" aria-label="Filter by topic">
+        <a class="f on" href="{{ "" | relURL }}" aria-current="page">All</a>
+        {{- range $f := $cfg.filters }}
+        {{- with site.GetPage (printf "/tags/%s" (urlize (lower $f.tag))) }}
+        <a class="f" href="{{ .RelPermalink }}">{{ $f.name }}</a>
+        {{- else }}
+        <span class="f off" title="No posts yet">{{ $f.name }}</span>
+        {{- end }}
+        {{- end }}
+    </nav>
+</div>
+{{- partial "console/post_table.html" (dict "pages" $pages "title" "Posts") }}
+<div class="grid2">
+    <div>{{ partial "console/series_pane.html" . }}</div>
+    {{- with $cfg.about }}
+    <section class="pane">
+        <div class="pane-h"><h2>About</h2><a href="{{ "about/" | relURL }}"><span>/about</span></a></div>
+        <dl class="kv">
+            {{- range . }}
+            <dt>{{ .k }}</dt><dd{{ if .muted }} class="muted"{{ end }}>{{ .v }}</dd>
+            {{- end }}
+        </dl>
+    </section>
+    {{- end }}
+</div>
+{{- end }}

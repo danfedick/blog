@@ -1,0 +1,13 @@
+{{- /* Lime kicker: "<Series> · Part N" for series posts, otherwise the first two tags.
+       Context: dict "page" <page> "seriesOnly" <bool> */ -}}
+{{- $p := .page }}
+{{- with $p.Params.series }}
+{{- $s := index . 0 }}
+<span class="ser">{{ $s }}{{ with $p.Params.seriesPart }} · Part {{ . }}{{ end }}</span>
+{{- else }}
+{{- if not $.seriesOnly }}
+{{- $t := slice }}
+{{- range first 2 ($p.GetTerms "tags") }}{{ $t = $t | append .LinkTitle }}{{ end }}
+{{- with $t }}<span class="ser">{{ delimit . " · " }}</span>{{ end }}
+{{- end }}
+{{- end }}

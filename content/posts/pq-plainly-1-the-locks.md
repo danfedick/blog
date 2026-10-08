@@ -1,14 +1,16 @@
 ---
 title: "The Locks: Post-Quantum Algorithms in Plain English"
-date: 2026-10-08
+date: 2026-10-08T10:13:00-04:00
 draft: false
 description: "Algorithms are lock designs. Keys fit those designs. Crypto-agility means swapping the lock without replacing the door. A plain-English tour of hashes, elliptic curves, lattices, hash-based signatures, and code-based crypto."
 tags: ["post-quantum", "pqc", "cryptography", "hashes", "lattices", "PKI", "crypto-agility"]
 series: ["Post-Quantum, Plainly"]
+seriesPart: 1
 ---
 
 I think Vitalik is one of the greats in the crypto industry. My fear for Ethereum is that it sounds so complicated that the general user won't be able to understand what's going on.
 
+{{< plain >}}
 ## In plain English
 
 Encryption is a lock on your data (and here, your data is access to your tokens).
@@ -25,6 +27,7 @@ The ability to quickly swap your locks out as one of them becomes weak is very i
 When algorithms are being described, they are describing the lock design. It's the math that decides how hard it is for these threats (quantum and AI) to pick. Your key is exactly what it sounds like: the key that unlocks the lock.
 
 If this interests you, I'm putting together a breakdown of some of these algorithms, then why the problems exist, and then what we can functionally and tactically do to protect our wallets and become cryptographically agile.
+{{< /plain >}}
 
 ---
 

@@ -6,6 +6,7 @@ timeZone: America/New_York
 theme: PaperMod
 
 enableRobotsTXT: true
+capitalizeListTitles: false # keep tag names as written (pqc, PKI)
 buildDrafts: false
 buildFuture: false
 buildExpired: false
@@ -42,34 +43,66 @@ privacy:
 
 taxonomies:
   tag: tags
+  series: series
 
 params:
   env: production
   title: Daniel Fedick
   description: "Field CTO writing on post-quantum cryptography, PKI, secrets management, and Ethereum."
   author: Daniel Fedick
-  defaultTheme: auto
-  disableThemeToggle: false
+  # Option C "Console" design is dark-only.
+  defaultTheme: dark
+  disableThemeToggle: true
 
   ShowReadingTime: true
-  ShowCodeCopyButtons: true
+  ShowCodeCopyButtons: false # Console design renders its own Copy button in the code tab header
   ShowPostNavLinks: true
   ShowBreadCrumbs: false
   ShowShareButtons: false
-  ShowToc: false
+  ShowToc: true
   ShowWordCount: false
   ShowRssButtonInSectionTermList: true
   ShowFullTextinRSS: true
   comments: false
   disableSpecial1stPost: true
-  hideFooter: false
+  hideFooter: true
+
+  # ---- Option C "Console" design ----
+  console:
+    host: blog.fedick.net
+    role: FIELD CTO
+    footer: ["blog.fedick.net", "Views are my own."]
+    contact:
+      name: Contact me
+      url: https://fedick.net
+    # Sidebar topic chips in this order (with live counts); remove to fall back to the top 8 by count.
+    topics: [post-quantum, pqc, crypto-agility, cryptography, pki, lattices, openssh, tls]
+    sidebarTopics: 8
+    # Home filter chips; tags without posts render as inert chips.
+    filters:
+      - { name: Post-quantum, tag: post-quantum }
+      - { name: PKI, tag: pki }
+      - { name: Secrets, tag: secrets }
+      - { name: Ethereum, tag: ethereum }
+    about:
+      - { k: Role, v: "Field CTO, HashiCorp Public Sector" }
+      - { k: Writes on, v: "Post-quantum cryptography, PKI, secrets management, Ethereum" }
+      - { k: Ethos, v: "Privacy is a right. Your keys are your data. Math beats promises. Don't trust, verify." }
+      - { k: Note, v: "Views are my own and do not represent my employer.", muted: true }
+    # Planned series. Published parts are matched by the `series` taxonomy plus `seriesPart`
+    # front matter; unpublished parts render as non-linked "coming soon" rows.
+    series:
+      - name: "Post-Quantum, Plainly"
+        parts:
+          - "The Locks: Post-Quantum Algorithms in Plain English"
+          - "Why this matters now"
+          - "Command-line walkthrough of wallet keys"
 
   homeInfoParams:
     Title: "Daniel Fedick"
     Image: /images/avatar.jpg
     Content: >-
       Field CTO. Writing on post-quantum cryptography, PKI, secrets management, and Ethereum.
-      Resume at [fedick.net](https://fedick.net).
 
   socialIcons:
     - name: x
@@ -87,12 +120,20 @@ menu:
       name: About
       url: /about/
       weight: 20
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 25
     - identifier: rss
       name: RSS
       url: /index.xml
       weight: 30
-    - identifier: resume
-      name: Resume
+    - identifier: x
+      name: "X"
+      url: https://x.com/DanFedick
+      weight: 35
+    - identifier: contact
+      name: Contact me
       url: https://fedick.net
       weight: 40
 
@@ -104,7 +145,10 @@ markup:
     noClasses: false
     codeFences: true
     guessSyntax: false
-    style: monokai
+    style: monokai # ignored by the Console CSS, which colours Chroma classes itself
+  tableOfContents:
+    startLevel: 2
+    endLevel: 3
 
 caches:
   images:

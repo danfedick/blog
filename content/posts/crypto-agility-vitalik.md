@@ -1,6 +1,6 @@
 ---
 title: "Assume the Math Will Move: Crypto-Agility After Vitalik's AI Warning"
-date: 2026-10-08
+date: 2026-10-08T09:08:00-04:00
 draft: false
 description: "Vitalik Buterin says AI-accelerated math could shrink crypto security margins, including for lattices. I agree, and I think the answer is crypto-agility: hybrids, swappable algorithms, and migrations you have rehearsed before you need them."
 tags: ["post-quantum", "crypto-agility", "pqc", "cryptography", "openssh", "tls", "ai", "key-management"]
@@ -10,9 +10,11 @@ On October 7, Vitalik Buterin [posted a long note on X](https://x.com/VitalikBut
 
 That is a sober take, and most of it is right. Where I land is one word: agility. If the math under our feet can move faster than we planned, the winning property of a system is how quickly and safely it can change what it runs on. Picking the perfect algorithm matters less than that.
 
+{{< plain >}}
 ## In plain English
 
 Encryption is a lock on your data. Every lock can eventually be picked, and the tools for picking digital locks keep getting better, now with help from AI. So the smart move is not to hunt for one perfect lock. Use two different locks at once, so a thief has to beat both, and set things up so you can swap in a new lock quickly when an old one starts to look weak. That ability to swap is called crypto-agility, and the rest of this post explains how to build it.
+{{< /plain >}}
 
 This is my first post here, so a quick note on where I come from. I'm a cypherpunk at heart. Privacy is a right, your keys are your data, and math beats promises. Don't trust, verify. That applies to Vitalik's argument too, so let's take it seriously.
 
@@ -41,7 +43,9 @@ That's why I won't bet everything on one family, lattice or anything else. Monoc
 
 ## Migrations are where PQC actually fails
 
-The line from Vitalik's post I'd put on a poster: "be careful about migrations; I personally have lost more money in botched migrations than I have lost in all hacks combined."
+The line from Vitalik's post I'd put on a poster:
+
+> "be careful about migrations; I personally have lost more money in botched migrations than I have lost in all hacks combined."
 
 Anyone who has run real infrastructure knows exactly what he means. Algorithms rarely fail in production. Operations fail. The certificate nobody knew about expires. A hardcoded cipher list sits in a library three dependencies deep. A rotation script runs for the first time during an incident. A key gets moved and its backup doesn't.
 

@@ -1,0 +1,4 @@
+{{- /* "In plain English" callout. Wraps the section in a teal aside; its H2 becomes the lime label (CSS). */ -}}
+<aside class="plain">
+{{ .Inner | .Page.RenderString (dict "display" "block") }}
+</aside>

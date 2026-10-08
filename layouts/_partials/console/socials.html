@@ -1,0 +1,7 @@
+{{- /* Lime squares for site.Params.socialIcons (x, rss). */ -}}
+{{- range site.Params.socialIcons }}
+{{- $name := lower .name }}
+{{- $url := .url }}
+{{- if eq $name "rss" }}{{ $url = "index.xml" | absURL }}{{ end }}
+<a class="sq" href="{{ $url }}" aria-label="{{ if eq $name "x" }}X{{ else }}{{ upper $name }}{{ end }}" title="{{ if eq $name "x" }}X{{ else }}{{ upper $name }}{{ end }}"{{ if strings.HasPrefix $url "http" }}{{ if not (strings.HasPrefix $url site.BaseURL) }} rel="me noopener" target="_blank"{{ end }}{{ end }}>{{ partial "console/icon.html" $name }}</a>
+{{- end }}

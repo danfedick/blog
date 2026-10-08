@@ -1,0 +1,11 @@
+{{- /* Flatten .Fragments.Headings to h2/h3 items, skipping the "In plain English" callout heading. */ -}}
+{{- $acc := .acc }}
+{{- range .headings }}
+{{- if and (ge .Level 2) (le .Level 3) (ne .ID "in-plain-english") .Title }}
+{{- $acc = $acc | append (dict "id" .ID "title" (.Title | plainify | htmlUnescape) "level" .Level) }}
+{{- end }}
+{{- with .Headings }}
+{{- $acc = partial "console/toc_items.html" (dict "headings" . "acc" $acc) }}
+{{- end }}
+{{- end }}
+{{- return $acc }}

@@ -1,0 +1,7 @@
+{{- /* Code block with a language tab and a lime Copy button (Console design). */ -}}
+{{- $lang := .Type | default "text" }}
+<figure class="code" data-lang="{{ $lang }}">
+<figcaption><span class="lang">{{ $lang }}</span><button class="copy" type="button">Copy</button></figcaption>
+{{- transform.Highlight .Inner .Type .Options }}
+</figure>
+{{- /**/ -}}

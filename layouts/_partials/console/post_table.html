@@ -1,0 +1,23 @@
+{{- /* Posts table. Context: dict "pages" <pages> "title" <pane title> */ -}}
+{{- $pages := .pages }}
+<section class="pane">
+    <div class="pane-h"><h2>{{ .title }}</h2><span>{{ len $pages }} · newest first</span></div>
+    <table class="c-table">
+        <thead>
+            <tr><th class="col-d">Date</th><th>Title</th><th class="col-tags">Tags</th><th class="col-rt">Read</th></tr>
+        </thead>
+        <tbody>
+            {{- range $pages }}
+            <tr>
+                <td class="d">{{ .Date.Format "2006-01-02" }}</td>
+                <td><a href="{{ .RelPermalink }}">
+                    {{- partial "console/kicker.html" (dict "page" . "seriesOnly" true) -}}
+                    <span class="t">{{ .Title }}</span>
+                    {{- with .Description }}<span class="desc">{{ . }}</span>{{ end }}</a></td>
+                <td class="col-tags"><div class="tg">{{ range first 4 (.GetTerms "tags") }}<a class="tag" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}</div></td>
+                <td class="rt">{{ .ReadingTime }} min</td>
+            </tr>
+            {{- end }}
+        </tbody>
+    </table>
+</section>
