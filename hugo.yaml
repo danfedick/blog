@@ -66,11 +66,14 @@ params:
 
   homeInfoParams:
     Title: "Daniel Fedick"
+    Image: /images/avatar.jpg
     Content: >-
       Field CTO. Writing on post-quantum cryptography, PKI, secrets management, and Ethereum.
       Resume at [fedick.net](https://fedick.net).
 
   socialIcons:
+    - name: x
+      url: https://x.com/DanFedick
     - name: rss
       url: index.xml
 

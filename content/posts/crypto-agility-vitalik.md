@@ -10,6 +10,10 @@ On October 7, Vitalik Buterin [posted a long note on X](https://x.com/VitalikBut
 
 That is a sober take, and most of it is right. Where I land is one word: agility. If the math under our feet can move faster than we planned, the winning property of a system is how quickly and safely it can change what it runs on. Picking the perfect algorithm matters less than that.
 
+## In plain English
+
+Encryption is a lock on your data. Every lock can eventually be picked, and the tools for picking digital locks keep getting better, now with help from AI. So the smart move is not to hunt for one perfect lock. Use two different locks at once, so a thief has to beat both, and set things up so you can swap in a new lock quickly when an old one starts to look weak. That ability to swap is called crypto-agility, and the rest of this post explains how to build it.
+
 This is my first post here, so a quick note on where I come from. I'm a cypherpunk at heart. Privacy is a right, your keys are your data, and math beats promises. Don't trust, verify. That applies to Vitalik's argument too, so let's take it seriously.
 
 ## The threat: AI as cryptanalyst
