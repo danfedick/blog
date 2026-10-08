@@ -48,7 +48,7 @@ taxonomies:
 params:
   env: production
   title: Daniel Fedick
-  description: "Field CTO writing on post-quantum cryptography, PKI, secrets management, and Ethereum."
+  description: "IBM Field CTO writing on HashiCorp and IBM products, post-quantum cryptography, PKI, secrets management, and Ethereum."
   author: Daniel Fedick
   # Option C "Console" design is dark-only.
   defaultTheme: dark
@@ -85,8 +85,8 @@ params:
       - { name: Secrets, tag: secrets }
       - { name: Ethereum, tag: ethereum }
     about:
-      - { k: Role, v: "Field CTO, HashiCorp Public Sector" }
-      - { k: Writes on, v: "Post-quantum cryptography, PKI, secrets management, Ethereum" }
+      - { k: Role, v: "Field CTO, HashiCorp Public Sector (IBM)" }
+      - { k: Writes on, v: "HashiCorp and IBM products, post-quantum cryptography, PKI, secrets management, Ethereum" }
       - { k: Ethos, v: "Privacy is a right. Your keys are your data. Math beats promises. Don't trust, verify." }
       - { k: Note, v: "Views are my own and do not represent my employer.", muted: true }
     # Planned series. Published parts are matched by the `series` taxonomy plus `seriesPart`
@@ -102,7 +102,7 @@ params:
     Title: "Daniel Fedick"
     Image: /images/avatar.jpg
     Content: >-
-      Field CTO. Writing on post-quantum cryptography, PKI, secrets management, and Ethereum.
+      IBM Field CTO. Writing on HashiCorp and IBM products, post-quantum cryptography, PKI, secrets management, and Ethereum.
 
   socialIcons:
     - name: x

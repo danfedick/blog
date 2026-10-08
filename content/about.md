@@ -7,9 +7,9 @@ hiddenInRss: true
 hideMeta: true
 ---
 
-I'm Daniel Fedick, Field CTO for HashiCorp Public Sector.
+I'm Daniel Fedick, Field CTO for HashiCorp Public Sector at IBM.
 
-This blog is where I write long-form about post-quantum cryptography, PKI, secrets management, and Ethereum.
+This blog is where I write long-form about HashiCorp and IBM products, post-quantum cryptography, PKI, secrets management, and Ethereum.
 
 [Contact me](https://fedick.net).
 
