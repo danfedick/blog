@@ -1,0 +1,108 @@
+baseURL: https://blog.fedick.net/
+title: Daniel Fedick
+locale: en-us
+defaultContentLanguage: en
+timeZone: America/New_York
+theme: PaperMod
+
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+
+pagination:
+  pagerSize: 10
+
+minify:
+  disableXML: true
+  minifyOutput: true
+
+outputs:
+  home: [HTML, RSS]
+  section: [HTML, RSS]
+  taxonomy: [HTML]
+  term: [HTML, RSS]
+
+services:
+  rss:
+    limit: -1
+
+# No analytics, no comments, no third-party embeds tracking.
+privacy:
+  disqus:
+    disable: true
+  googleAnalytics:
+    disable: true
+  x:
+    enableDNT: true
+  youTube:
+    privacyEnhanced: true
+  vimeo:
+    enableDNT: true
+
+taxonomies:
+  tag: tags
+
+params:
+  env: production
+  title: Daniel Fedick
+  description: "Field CTO writing on post-quantum cryptography, PKI, secrets management, and Ethereum."
+  author: Daniel Fedick
+  defaultTheme: auto
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowCodeCopyButtons: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: false
+  ShowShareButtons: false
+  ShowToc: false
+  ShowWordCount: false
+  ShowRssButtonInSectionTermList: true
+  ShowFullTextinRSS: true
+  comments: false
+  disableSpecial1stPost: true
+  hideFooter: false
+
+  homeInfoParams:
+    Title: "Daniel Fedick"
+    Content: >-
+      Field CTO. Writing on post-quantum cryptography, PKI, secrets management, and Ethereum.
+      Resume at [fedick.net](https://fedick.net).
+
+  socialIcons:
+    - name: rss
+      url: index.xml
+
+menu:
+  main:
+    - identifier: posts
+      name: Posts
+      url: /posts/
+      weight: 10
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 20
+    - identifier: rss
+      name: RSS
+      url: /index.xml
+      weight: 30
+    - identifier: resume
+      name: Resume
+      url: https://fedick.net
+      weight: 40
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: false
+  highlight:
+    noClasses: false
+    codeFences: true
+    guessSyntax: false
+    style: monokai
+
+caches:
+  images:
+    dir: :cacheDir/images
