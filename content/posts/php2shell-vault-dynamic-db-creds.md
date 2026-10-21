@@ -180,7 +180,7 @@ PHP hides in more places than people expect: the main web app, an old WordPress 
 
 If you keep a live inventory of what's deployed (SBOMs for every image and build, tied to where each one runs), that question becomes a search. You can find the affected systems in minutes, patch or rebuild them in hours, and spend the rest of the day on the ones that can't be patched yet. Isolate those, and make sure they don't hold a long-lived key.
 
-If you're an IBM shop, [IBM Concert Protect](https://www.ibm.com/docs/en/concert-platform?topic=overview-protect) is built for this. It takes in SBOMs and the results from scanners you already run, such as Prisma Cloud, Aqua or Sysdig, maps each component to the applications and environments that use it, and ranks the CVEs by risk. It can then open the remediation tickets in Jira, GitHub or ServiceNow, so a finding like PHP2Shell turns into a list of owners and systems instead of a hunt.
+[IBM Concert Protect](https://www.ibm.com/docs/en/concert-platform?topic=overview-protect) is built for this. It takes in SBOMs and the results from scanners you already run, such as Prisma Cloud, Aqua or Sysdig, maps each component to the applications and environments that use it, and ranks the CVEs by risk. It can then open the remediation tickets in Jira, GitHub or ServiceNow, so a finding like PHP2Shell turns into a list of owners and systems instead of a hunt.
 
 ## Harvest now, decrypt later
 
