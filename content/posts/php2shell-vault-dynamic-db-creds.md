@@ -55,6 +55,8 @@ Every app instance gets its own username, so database logs show which app did wh
 
 Below is a minimal PostgreSQL example. The syntax follows HashiCorp's [PostgreSQL database secrets engine docs](https://developer.hashicorp.com/vault/docs/secrets/databases/postgresql). Names and passwords are placeholders.
 
+{{< figure src="/images/php2shell-db-secrets-engine.svg" alt="The PHP app logs in to Vault with AppRole, Kubernetes or a cloud identity and gets a token scoped by policy. It reads database/creds/app-readonly. Vault uses its own admin connection, database/config/app-postgres, whose password was rotated with rotate-root so only Vault knows it, and runs the role's creation statements: CREATE ROLE with a password and VALID UNTIL expiry, then GRANT SELECT. Vault returns a unique username, password and lease with a default TTL of 1h. The app connects to PostgreSQL with those credentials. Renewing the lease extends it up to the 24h max TTL. When the TTL ends or someone runs vault lease revoke, Vault drops the database user." >}}
+
 **1. Turn on the database secrets engine.**
 
 ```bash
@@ -183,6 +185,8 @@ PHP hides in more places than people expect: the main web app, an old WordPress 
 If you keep a live inventory of what's deployed (SBOMs for every image and build, tied to where each one runs), that question becomes a search. You can find the affected systems in minutes, patch or rebuild them in hours, and spend the rest of the day on the ones that can't be patched yet. Isolate those, and make sure they don't hold a long-lived key.
 
 [IBM Concert Protect](https://www.ibm.com/docs/en/concert-platform?topic=overview-protect) is built for this. It takes in SBOMs and the results from scanners you already run, such as Prisma Cloud, Aqua or Sysdig, maps each component to the applications and environments that use it, and ranks the CVEs by risk. It can then open the remediation tickets in Jira, GitHub or ServiceNow, so a finding like PHP2Shell turns into a list of owners and systems instead of a hunt.
+
+{{< figure src="/images/php2shell-software-visibility.svg" alt="Sources: container images, source code, VMs and runtimes, and vendor appliances. Scanners produce SBOMs and vulnerability scans. A central inventory such as IBM Concert Protect maps each component to the applications and environments that use it and ranks CVEs by risk. Outputs: a search such as where do we run PHP 8.x, remediation tickets to owners in Jira, GitHub or ServiceNow, and a policy-as-code gate with Sentinel or OPA in CI and at admission that blocks vulnerable versions from being redeployed." >}}
 
 ## Harvest now, decrypt later
 
