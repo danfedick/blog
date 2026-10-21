@@ -190,9 +190,10 @@ Dynamic credentials don't protect the data itself, though. Customer records in t
 
 ## Next steps
 
-Patch PHP to 8.5.12, 8.4.27, 8.3.36 or 8.2.35, then rotate any long-lived secret a vulnerable server could read.
-
-After that, start moving apps off static, long-lived credentials. Give each app a short-lived credential from Vault. Let it expire by time, kill it with one command when you need to, and let the app pick up a fresh one when it restarts. Then a compromised web server only gives up passwords that are about to expire.
+1. **Find every PHP install.** You can't patch what you don't know you run. Use your inventory and SBOMs (see the inventory section above) to list every system and image with PHP, including the ones embedded in vendor products.
+2. **Patch.** Update PHP to 8.5.12, 8.4.27, 8.3.36 or 8.2.35, then rotate any long-lived secret a vulnerable server could read.
+3. **Block the old versions.** Add a policy-as-code rule, in Sentinel or OPA, to CI and to deploy or admission checks that rejects images and builds with the vulnerable PHP versions. Otherwise an old image can get redeployed after you've cleaned up.
+4. **Move apps off static credentials.** Give each app a short-lived credential from Vault that expires by time, can be revoked with one command, and gets replaced with a fresh one when the app restarts. A web server compromised after that only gives up passwords that are about to expire.
 
 ---
 
