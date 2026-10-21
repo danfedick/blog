@@ -6,7 +6,7 @@ description: "Two critical PHP flaws can let one unauthenticated request run cod
 tags: ["secrets", "vault", "zero-trust", "php", "cve", "dynamic-credentials", "sbom", "container-security", "post-quantum"]
 ---
 
-## What happened
+## The PHP2Shell vulnerabilities
 
 Today the FBI Cyber Division [posted on X](https://x.com/FBICyberDiv/status/2112921648252719420) that two critical vulnerabilities have been found in PHP, "a widely used programming language that powers websites and web applications." The FBI says the flaws, CVE-2026-109618 and CVE-2026-109619, "could allow malicious cyber actors to remotely execute code in PHP core."
 
@@ -20,7 +20,7 @@ Sources: [BleepingComputer](https://www.bleepingcomputer.com/news/security/php-s
 
 Patch now. The PHP team says there are no complete mitigations and updating is the only safe choice.
 
-## What an attacker takes with them
+## Credential exposure
 
 Patching closes the hole, but it doesn't tell you what already walked out. If someone ran code on that server, the first thing to ask is what they could read.
 
@@ -28,7 +28,7 @@ On a lot of systems the answer is the database password sitting in `config.php` 
 
 It hasn't changed because changing it is a pain. You update the password in the database, then in every app and server that uses it, then restart all of them at once. If you miss one, something breaks. So rotation keeps getting pushed off, and a stolen copy keeps working long after the patch is in.
 
-## The Vault way: credentials that expire
+## Dynamic database credentials
 
 With HashiCorp Vault's [database secrets engine](https://developer.hashicorp.com/vault/docs/secrets/databases), the app works more like a hotel guest than a tenant with a permanent key.
 
@@ -51,7 +51,7 @@ You can cut off a credential two ways:
 
 Every app instance gets its own username, so database logs show which app did what.
 
-## The commands
+## Vault configuration
 
 Below is a minimal PostgreSQL example. The syntax follows HashiCorp's [PostgreSQL database secrets engine docs](https://developer.hashicorp.com/vault/docs/secrets/databases/postgresql). Names and passwords are placeholders.
 
@@ -126,7 +126,7 @@ vault lease revoke -prefix database/creds/app-readonly
 
 Vault drops those database users. Whatever the attacker copied stops working. ([lease revoke docs](https://developer.hashicorp.com/vault/docs/commands/lease/revoke))
 
-### Apps that need a fixed username
+### Static roles for legacy apps
 
 Some legacy apps or databases expect a fixed username. For those, Vault has [**static roles**](https://developer.hashicorp.com/vault/docs/secrets/databases#static-roles): the username stays the same, but Vault owns the password and rotates it on a schedule.
 
@@ -143,7 +143,7 @@ The `legacy_app` user must already exist in the database, and Vault changes its 
 
 It isn't as strong as a unique user per app instance, but it beats a password nobody has changed in years.
 
-## Vetting software before it gets in
+## Securing the software supply chain
 
 Short-lived credentials limit the damage after a break-in. You still want to stop vulnerable software from shipping in the first place.
 
@@ -155,7 +155,7 @@ Short-lived credentials limit the damage after a break-in. You still want to sto
 
 There are many options for the scanning itself. Commercial platforms include [Wiz](https://www.wiz.io/), [Palo Alto Networks Prisma Cloud](https://www.paloaltonetworks.com/prisma/cloud), [Tenable](https://www.tenable.com/products/vulnerability-management) and [Qualys](https://www.qualys.com/apps/vulnerability-management-detection-response/). On the open-source side, [Syft](https://github.com/anchore/syft) generates SBOMs, and [Grype](https://github.com/anchore/grype) and [Trivy](https://trivy.dev/) scan images and filesystems for known vulnerabilities. If your developers already use OpenAI's Codex, [Codex Security](https://help.openai.com/en/articles/20001107-codex-security) (a research preview on some ChatGPT plans) connects to GitHub repos, scans the code or individual commits, tries to confirm each finding in an isolated environment, and suggests patches for a person to review.
 
-## AI is finding bugs faster now
+## AI-driven vulnerability discovery
 
 In its [Patch the Planet post](https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/), OpenAI says the security firm Calif found one of the flaws using an OpenAI model, and Wiz independently found and reported both. PHP's maintainers led the fix. OpenAI, Wiz, Cloudflare and others helped test patches and prepare protections, such as firewall rules, before the details went public. OpenAI says it believes AI found these bugs before attackers did, which gave defenders time to get ready. It also warns that the same models can help attackers build exploits quickly, and that it expects findings like this to "increase sharply in the coming months."
 
@@ -163,7 +163,7 @@ The post proposes a way to handle disclosure at that pace. Maintainers and resea
 
 My takeaway for operators: if bugs are found and disclosed faster, the time between "patch released" and "exploit in the wild" gets shorter. That's another reason to keep an inventory you can search and credentials that expire on their own.
 
-## Know everything you run
+## Software inventory and SBOMs
 
 When something like PHP2Shell lands, the first question is "where do we run PHP, and which version?" If answering takes a week of emails, the attackers are ahead of you.
 
@@ -181,7 +181,7 @@ Long-lived secrets make that worse. If a recording contains a database password 
 
 Dynamic credentials don't protect the data itself, though. Customer records in that recorded traffic stay sensitive no matter how short the credential's life was. Protecting that data means moving key exchange to post-quantum algorithms such as ML-KEM, which NIST standardized in [FIPS 203](https://csrc.nist.gov/pubs/fips/203/final), often in a hybrid with today's algorithms during the transition. Short-lived credentials shrink how long a stolen secret stays useful, and post-quantum key exchange protects what's inside the traffic, so you need both.
 
-## Where to go from here
+## Next steps
 
 Patch PHP to 8.5.12, 8.4.27, 8.3.36 or 8.2.35, then rotate any long-lived secret a vulnerable server could read.
 
