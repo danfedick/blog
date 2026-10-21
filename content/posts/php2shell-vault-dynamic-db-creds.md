@@ -14,19 +14,19 @@ Researchers call the pair **PHP2Shell**. The PHP project gave advance warning on
 
 Any PHP install that serves web requests is affected, including PHP-FPM, Apache with mod_php, php-cgi, FrankenPHP and LiteSpeed. The PHP team says mod_php is the riskiest setup, with a demonstrated exploit where one unauthenticated request starts the attack before any application code runs. Code runs with the rights of the web worker account. Proof-of-concept code is circulating, and Cloudflare said it was already seeing early attacks before the patches shipped. PHP 8.1 and older no longer get updates from the PHP project, though the team published minimal source backports for 7.4, 8.0 and 8.1.
 
-{{< figure src="/images/php2shell-what-happened.svg" alt="PHP2Shell attack path: an attacker sends one unauthenticated HTTP request, a PHP core flaw (CVE-2026-109618 or CVE-2026-109619, CVSS v4.0 9.2) lets it run code, the attacker gets remote code execution on the web server, then reads config files and secrets and reaches the database. Fix: update to PHP 8.5.12, 8.4.27, 8.3.36 or 8.2.35, released October 21 at about 10:00 AM ET." caption="One unauthenticated request can end with your database password in someone else's hands." >}}
+{{< figure src="/images/php2shell-what-happened.svg" alt="PHP2Shell attack path: an attacker sends one unauthenticated HTTP request, a PHP core flaw (CVE-2026-109618 or CVE-2026-109619, CVSS v4.0 9.2) lets it run code, the attacker gets remote code execution on the web server, then reads config files and secrets and reaches the database. Fix: update to PHP 8.5.12, 8.4.27, 8.3.36 or 8.2.35, released October 21 at about 10:00 AM ET." >}}
 
 Sources: [BleepingComputer](https://www.bleepingcomputer.com/news/security/php-ships-emergency-patches-for-critical-php2shell-flaws/), [CERT-EU advisory 2026-018](https://cert.europa.eu/publications/security-advisories/2026-018), and the [PHP project announcement](https://www.php.net/archive/2026.php#2026-10-20-1).
 
-Patch now. The PHP team says there are no complete mitigations and updating is the only safe choice. Patching also does nothing about whatever an attacker already copied off the box.
+Patch now. The PHP team says there are no complete mitigations and updating is the only safe choice.
 
 ## What an attacker takes with them
 
-Don't trust a server to stay clean. Plan for the day it isn't, and ask what the attacker could read from it.
+Patching closes the hole, but it doesn't tell you what already walked out. If someone ran code on that server, the first thing to ask is what they could read.
 
-On a lot of systems, that's a database password in `config.php` or `.env`. Several apps often share it, it usually has more rights than it needs, and it hasn't changed in years because changing it is painful.
+On a lot of systems the answer is the database password sitting in `config.php` or `.env`. It's often shared by several apps, it usually has more access than any of them need, and it hasn't changed in years.
 
-Here's why it's painful. With a static password in config, rotating it means updating the database, then updating every app and server that uses it, then redeploying or restarting all of them at the same moment. Miss one and something breaks. So teams put it off, and the stolen copy keeps working long after the patch goes in.
+It hasn't changed because changing it is a pain. You update the password in the database, then in every app and server that uses it, then restart all of them at once. If you miss one, something breaks. So rotation keeps getting pushed off, and a stolen copy keeps working long after the patch is in.
 
 ## The Vault way: credentials that expire
 
@@ -38,9 +38,9 @@ With HashiCorp Vault's [database secrets engine](https://developer.hashicorp.com
 4. While the app runs, it renews the lease, up to a hard maximum.
 5. When the lease runs out or someone revokes it, Vault deletes that database user.
 
-So what does the app itself have to do? Less than you'd think. It needs a way to log in to Vault and a way to read the credential it's given. Most teams don't write that code. [Vault Agent](https://developer.hashicorp.com/vault/docs/agent-and-proxy/agent), running next to the app or as a sidecar, logs in, fetches the credential, writes it to a file, and keeps the lease renewed. The app reads a file the way it used to read `config.php`.
+The app itself needs very little: a way to log in to Vault and a way to read the credential it's given. Most teams don't write that code. [Vault Agent](https://developer.hashicorp.com/vault/docs/agent-and-proxy/agent), running next to the app or as a sidecar, logs in, fetches the credential, writes it to a file, and keeps the lease renewed. The app reads a file the way it used to read `config.php`.
 
-Rotation also becomes a restart. When an app restarts, it gets a brand-new username and password. Nobody edits a config file and nothing needs a coordinated change.
+Rotation also turns into a restart, because a restarted app gets a brand-new username and password. Nobody edits a config file and nothing needs a coordinated change.
 
 You can cut off a credential two ways:
 
@@ -112,7 +112,7 @@ In practice, the app doesn't run this by hand. [Vault Agent](https://developer.h
 vault write -f database/rotate-root/app-postgres
 ```
 
-After this, nobody (including you) knows the password Vault uses to manage the database. That's the point. See the [API docs for rotate-root](https://developer.hashicorp.com/vault/api-docs/secret/databases#rotate-root-credentials).
+After this, nobody (including you) knows the password Vault uses to manage the database. See the [API docs for rotate-root](https://developer.hashicorp.com/vault/api-docs/secret/databases#rotate-root-credentials).
 
 **6. Revoke by command.** If you think a server was compromised, cut off one lease, or every credential issued from a role:
 
@@ -145,7 +145,7 @@ It isn't as strong as a unique user per app instance, but it beats a password no
 
 ## Vetting software before it gets in
 
-Short-lived credentials limit the damage after a break-in. You still want to stop vulnerable software from shipping in the first place. Here's how I'd set up the front door.
+Short-lived credentials limit the damage after a break-in. You still want to stop vulnerable software from shipping in the first place.
 
 **Scan at rest.** Scan code repositories, build artifacts and stored images, both when they're created and again later. A clean scan in March says nothing about a CVE published in October.
 
@@ -153,11 +153,11 @@ Short-lived credentials limit the damage after a break-in. You still want to sto
 
 **Enforce policy at the gate.** Scanning only helps if something acts on the results. Put a policy check in CI and at deploy time, for example a Kubernetes admission controller, that blocks builds and images that weren't scanned, don't have an SBOM, or contain a known critical CVE. Policy-as-code tools such as Open Policy Agent or HashiCorp Sentinel can express rules like "no image with a critical CVE runs in production."
 
-There are many options for the scanning itself. Commercial platforms include [Wiz](https://www.wiz.io/), [Palo Alto Networks Prisma Cloud](https://www.paloaltonetworks.com/prisma/cloud), [Tenable](https://www.tenable.com/products/vulnerability-management) and [Qualys](https://www.qualys.com/apps/vulnerability-management-detection-response/). On the open-source side, [Syft](https://github.com/anchore/syft) generates SBOMs, and [Grype](https://github.com/anchore/grype) and [Trivy](https://trivy.dev/) scan images and filesystems for known vulnerabilities. If your developers already use OpenAI's Codex, [Codex Security](https://help.openai.com/en/articles/20001107-codex-security) (a research preview on some ChatGPT plans) connects to GitHub repos, scans the code or individual commits, tries to confirm each finding in an isolated environment, and suggests patches for a person to review. Pick what fits your environment.
+There are many options for the scanning itself. Commercial platforms include [Wiz](https://www.wiz.io/), [Palo Alto Networks Prisma Cloud](https://www.paloaltonetworks.com/prisma/cloud), [Tenable](https://www.tenable.com/products/vulnerability-management) and [Qualys](https://www.qualys.com/apps/vulnerability-management-detection-response/). On the open-source side, [Syft](https://github.com/anchore/syft) generates SBOMs, and [Grype](https://github.com/anchore/grype) and [Trivy](https://trivy.dev/) scan images and filesystems for known vulnerabilities. If your developers already use OpenAI's Codex, [Codex Security](https://help.openai.com/en/articles/20001107-codex-security) (a research preview on some ChatGPT plans) connects to GitHub repos, scans the code or individual commits, tries to confirm each finding in an isolated environment, and suggests patches for a person to review.
 
 ## AI is finding bugs faster now
 
-PHP2Shell is also a preview of what's coming. In its [Patch the Planet post](https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/), OpenAI says the security firm Calif found one of the flaws using an OpenAI model, and Wiz independently found and reported both. PHP's maintainers led the fix. OpenAI, Wiz, Cloudflare and others helped test patches and prepare protections, such as firewall rules, before the details went public. OpenAI says it believes AI found these bugs before attackers did, which gave defenders time to get ready. It also warns that the same models can help attackers build exploits quickly, and that it expects findings like this to "increase sharply in the coming months."
+In its [Patch the Planet post](https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/), OpenAI says the security firm Calif found one of the flaws using an OpenAI model, and Wiz independently found and reported both. PHP's maintainers led the fix. OpenAI, Wiz, Cloudflare and others helped test patches and prepare protections, such as firewall rules, before the details went public. OpenAI says it believes AI found these bugs before attackers did, which gave defenders time to get ready. It also warns that the same models can help attackers build exploits quickly, and that it expects findings like this to "increase sharply in the coming months."
 
 The post proposes a way to handle disclosure at that pace. Maintainers and researchers confirm and fix the bug first. Then distributors, hosting providers and security vendors get early notice so their updates are ready. Government agencies such as CISA help the warning reach critical services. Public guidance goes out once a patch exists. OpenAI also published an open-source [PHP version checker](https://github.com/openai/php2shell-checker). You can run it with Node against a URL or a server's local PHP, or install it as a Codex skill. It only reads the version a server reports, so a hidden version comes back as unknown, not safe. OpenAI is also offering subsidized access to [Daybreak](https://openai.com/daybreak/), its program that gives vetted defenders AI models for security work, to under-resourced teams that protect essential services.
 
@@ -173,13 +173,13 @@ If you keep a live inventory of what's deployed (SBOMs for every image and build
 
 ## Harvest now, decrypt later
 
-This idea sounds unrelated, but it's the same problem over a longer time span.
+This is the same problem stretched over years instead of days.
 
 Attackers can record encrypted traffic and stolen encrypted data today, even though they can't read it yet. They store it and wait. Once a large enough quantum computer exists, the public-key math protecting much of today's traffic could be broken, and the recordings become readable. NIST [describes this](https://www.nist.gov/cybersecurity/what-post-quantum-cryptography) as "harvest now, decrypt later," and it's one reason NIST, NSA and [CISA](https://www.cisa.gov/quantum) are pushing organizations to plan their post-quantum move now.
 
 Long-lived secrets make that worse. If a recording contains a database password that's still valid five years from now, it's worth decrypting. A credential that expired an hour after it was issued isn't worth anything when the recording is finally cracked. The same goes for a config file stolen this week through PHP2Shell: a static password is worth something for as long as nobody changes it.
 
-Dynamic credentials don't protect the data itself, though. Customer records in that recorded traffic stay sensitive no matter how short the credential's life was. Protecting that data means moving key exchange to post-quantum algorithms such as ML-KEM, which NIST standardized in [FIPS 203](https://csrc.nist.gov/pubs/fips/203/final), often in a hybrid with today's algorithms during the transition. Short-lived credentials shrink how long a stolen secret stays useful, and post-quantum key exchange protects what's inside the traffic. You'll need both.
+Dynamic credentials don't protect the data itself, though. Customer records in that recorded traffic stay sensitive no matter how short the credential's life was. Protecting that data means moving key exchange to post-quantum algorithms such as ML-KEM, which NIST standardized in [FIPS 203](https://csrc.nist.gov/pubs/fips/203/final), often in a hybrid with today's algorithms during the transition. Short-lived credentials shrink how long a stolen secret stays useful, and post-quantum key exchange protects what's inside the traffic, so you need both.
 
 ## Where to go from here
 
