@@ -31,7 +31,6 @@ If this interests you, I'm putting together a breakdown of some of these algorit
 
 ---
 
-This is Part 1 of three. Part 2 (coming soon) covers why this matters now. Part 3 (coming soon) is a command-line walkthrough of wallet keys.
 
 Privacy is a right. Your keys are your data. Math beats promises. Don't trust, verify. Apply that same standard to the new post-quantum algorithms: understand what they do before you trust them with anything.
 
@@ -64,7 +63,7 @@ A hash function is a blender with three habits:
 2. One tiny change scrambles the result.
 3. You cannot run it backwards.
 
-We use hashes for integrity checks, blockchain addresses, and as building blocks inside bigger schemes. SHA-256 and SHA-3 are common examples. Quantum computers do not break hashes the way they break RSA and elliptic curves; they mostly push us toward longer outputs. More on that in Part 2.
+We use hashes for integrity checks, blockchain addresses, and as building blocks inside bigger schemes. SHA-256 and SHA-3 are common examples. Quantum computers do not break hashes the way they break RSA and elliptic curves; they mostly push us toward longer outputs.
 
 ## What we use today: elliptic curves
 
@@ -84,7 +83,7 @@ NIST standardized two lattice schemes in August 2024:
 - **ML-KEM** ([FIPS 203](https://csrc.nist.gov/pubs/fips/203/final)): key encapsulation. The workhorse for hybrid TLS and SSH (for example `X25519MLKEM768`).
 - **ML-DSA** ([FIPS 204](https://csrc.nist.gov/pubs/fips/204/final)): signatures.
 
-Keys and signatures are larger than elliptic curves, but still practical for most network protocols. Lattices are the default post-quantum choice for key exchange today. They are also the family getting nervous attention from people watching AI-accelerated math; that is a Part 2 story, not a known break.
+Keys and signatures are larger than elliptic curves, but still practical for most network protocols. Lattices are the default post-quantum choice for key exchange today. They are also the family getting nervous attention from people watching AI-accelerated math, but that is not a known break.
 
 ## Hash-based signatures: boring on purpose
 
@@ -129,6 +128,5 @@ Different math from lattices is the point. Diversity of lock designs avoids a si
 
 Lock designs are algorithms. Keys fit them. Hybrids put two designs on one door. Agility lets you swap designs without rebuilding the house. Key exchange and signatures are different jobs. Hashes are a one-way blender: great for fingerprints and for certain signatures, useless alone for agreeing on a secret.
 
-Next up, coming soon: the problem those locks are meant to solve. Then Part 3 puts wallet keys on the command line so you can feel what "changing the lock" actually breaks.
 
 *Views are my own and do not represent my employer. Nothing here is financial advice.*
