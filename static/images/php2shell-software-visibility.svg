@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 566" width="760" height="566" role="img" aria-labelledby="t d">
+<title id="t">Scanning and visibility of installed software</title><desc id="d">Sources: container images, source code, VMs and runtimes, and vendor appliances. Scanners produce SBOMs and vulnerability scans. A central inventory such as IBM Concert Protect maps each component to the applications and environments that use it and ranks CVEs by risk. Outputs: a search such as where do we run PHP 8.x, remediation tickets to owners in Jira, GitHub or ServiceNow, and a policy-as-code gate with Sentinel or OPA in CI and at admission that blocks vulnerable versions from being redeployed.</desc>
+<style>.s{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style>
+<rect width="760" height="566" rx="16" fill="#0f1113"/>
+<text x="24" y="40" class="s" font-size="14" font-weight="700" fill="#9a9b9e">VISIBILITY</text>
+<text x="138" y="40" class="s" font-size="20" font-weight="700" fill="#e8e4dc">From scans to a searchable inventory</text>
+<rect x="20" y="62" width="720" height="98" rx="10" fill="#16191c" stroke="#3a3a3a" stroke-width="1.5"/>
+<circle cx="54" cy="92" r="15" fill="#ccff00"/><text x="54" y="98" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">1</text>
+<text x="86" y="98" class="s" font-size="19" font-weight="700" fill="#e8e4dc">What you run</text>
+<text x="86" y="126" class="s" font-size="16" fill="#b8b9bc">Container images, source code</text>
+<text x="86" y="152" class="s" font-size="16" fill="#b8b9bc">VMs and runtimes, vendor appliances</text>
+<line x1="54" y1="160" x2="54" y2="170" stroke="#9a9b9e" stroke-width="2.2"/><path d="M54,180 l-7,-12 h14 z" fill="#9a9b9e"/>
+<rect x="20" y="182" width="720" height="72" rx="10" fill="#16191c" stroke="#3a3a3a" stroke-width="1.5"/>
+<circle cx="54" cy="212" r="15" fill="#ccff00"/><text x="54" y="218" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">2</text>
+<text x="86" y="218" class="s" font-size="19" font-weight="700" fill="#e8e4dc">Scanners</text>
+<text x="86" y="246" class="s" font-size="16" fill="#b8b9bc">Produce SBOMs and vulnerability scans</text>
+<line x1="54" y1="254" x2="54" y2="264" stroke="#9a9b9e" stroke-width="2.2"/><path d="M54,274 l-7,-12 h14 z" fill="#9a9b9e"/>
+<rect x="20" y="276" width="720" height="98" rx="10" fill="#16191c" stroke="#ccff00" stroke-width="1.5"/>
+<circle cx="54" cy="306" r="15" fill="#ccff00"/><text x="54" y="312" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">3</text>
+<text x="86" y="312" class="s" font-size="19" font-weight="700" fill="#e8e4dc">Central inventory (e.g. IBM Concert Protect)</text>
+<text x="86" y="340" class="s" font-size="16" fill="#b8b9bc">Maps components to apps and environments</text>
+<text x="86" y="366" class="s" font-size="16" fill="#b8b9bc">Ranks CVEs by risk</text>
+<line x1="54" y1="374" x2="54" y2="384" stroke="#9a9b9e" stroke-width="2.2"/><path d="M54,394 l-7,-12 h14 z" fill="#9a9b9e"/>
+<rect x="20" y="396" width="720" height="150" rx="10" fill="#16191c" stroke="#3a3a3a" stroke-width="1.5"/>
+<circle cx="54" cy="426" r="15" fill="#ccff00"/><text x="54" y="432" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">4</text>
+<text x="86" y="432" class="s" font-size="19" font-weight="700" fill="#e8e4dc">What you get</text>
+<text x="86" y="460" class="s" font-size="16" fill="#b8b9bc">Search: where do we run PHP 8.x?</text>
+<text x="86" y="486" class="s" font-size="16" fill="#b8b9bc">Tickets to owners in Jira, GitHub or ServiceNow</text>
+<text x="86" y="512" class="s" font-size="16" fill="#b8b9bc">Policy gate: Sentinel or OPA in CI and admission</text>
+<text x="86" y="538" class="s" font-size="16" fill="#b8b9bc">blocks vulnerable versions from redeploy</text>
+</svg>

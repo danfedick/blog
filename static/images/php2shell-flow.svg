@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1035" width="760" height="1035" role="img" aria-labelledby="t d">
+<title id="t">Static database password vs. Vault dynamic credentials</title>
+<desc id="d">Before: a PHP app reads a never-expiring password from config.php. After: the app authenticates to Vault, gets a token, requests credentials; Vault creates a PostgreSQL role with an expiry, returns a unique user and password with a one-hour lease, the app connects, renews while running, and Vault drops the role when the lease expires or is revoked.</desc>
+<style>.s{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style>
+<rect width="760" height="1035" rx="16" fill="#0f1113"/>
+<text x="24" y="40" class="s" font-size="14" font-weight="700" fill="#9a9b9e" text-anchor="start">BEFORE</text>
+<text x="100" y="40" class="s" font-size="20" font-weight="700" fill="#e8e4dc" text-anchor="start">A static password in a config file</text>
+<rect x="20" y="58" width="720" height="262" rx="10" fill="#16191c" stroke="#3a3a3a" stroke-width="1.5"/>
+<rect x="44" y="82" width="330" height="124" rx="10" fill="#0b0b0b" stroke="#3a3a3a" stroke-width="1.5"/>
+<text x="62" y="110" class="m" font-size="14" font-weight="400" fill="#9a9b9e" text-anchor="start">config.php</text>
+<text x="62" y="146" class="m" font-size="17" font-weight="400" fill="#e8e4dc" text-anchor="start">DB_USER = 'app'</text>
+<text x="62" y="178" class="m" font-size="17" font-weight="400" fill="#e8e4dc" text-anchor="start">DB_PASS = 'S3cret!'</text>
+<line x1="384" y1="144" x2="548" y2="144" stroke="#9a9b9e" stroke-width="2.2"/><path d="M562,144 l-14,-7 v14 z" fill="#9a9b9e"/>
+<text x="470" y="132" class="s" font-size="14" font-weight="400" fill="#9a9b9e" text-anchor="middle">every request</text>
+<path d="M600,118 v40 a26,9 0 0 0 52,0 v-40" fill="none" stroke="#e8e4dc" stroke-width="2.4"/><ellipse cx="626" cy="118" rx="26" ry="9" fill="none" stroke="#e8e4dc" stroke-width="2.4"/><path d="M600,138 a26,9 0 0 0 52,0" fill="none" stroke="#e8e4dc" stroke-width="2.4"/>
+<text x="626" y="194" class="s" font-size="16" font-weight="400" fill="#e8e4dc" text-anchor="middle">PostgreSQL</text>
+<path d="M50,232 l10,10 m0,-10 l-10,10" stroke="#9a9b9e" stroke-width="2.2"/>
+<text x="72" y="242" class="s" font-size="16" font-weight="400" fill="#e8e4dc" text-anchor="start">Never expires: it lives for years</text>
+<path d="M50,262 l10,10 m0,-10 l-10,10" stroke="#9a9b9e" stroke-width="2.2"/>
+<text x="72" y="272" class="s" font-size="16" font-weight="400" fill="#e8e4dc" text-anchor="start">Shared by every server and laptop</text>
+<path d="M50,292 l10,10 m0,-10 l-10,10" stroke="#9a9b9e" stroke-width="2.2"/>
+<text x="72" y="302" class="s" font-size="16" font-weight="400" fill="#e8e4dc" text-anchor="start">One RCE (like PHP2Shell) copies it out, and it still works after you patch</text>
+<text x="24" y="372" class="s" font-size="14" font-weight="700" fill="#ccff00" text-anchor="start">AFTER</text>
+<text x="90" y="372" class="s" font-size="20" font-weight="700" fill="#e8e4dc" text-anchor="start">Vault dynamic database credentials</text>
+<rect x="20" y="390" width="720" height="625" rx="10" fill="#16191c" stroke="#3a3a3a" stroke-width="1.5"/>
+<rect x="35" y="412" width="190" height="58" rx="10" fill="#0b0b0b" stroke="#3a3a3a" stroke-width="1.5"/>
+<text x="130" y="437" class="s" font-size="18" font-weight="700" fill="#e8e4dc" text-anchor="middle">PHP app</text>
+<text x="130" y="459" class="s" font-size="13" font-weight="400" fill="#9a9b9e" text-anchor="middle">web worker</text>
+<line x1="130" y1="470" x2="130" y2="999" stroke="#3a3a3a" stroke-width="2" stroke-dasharray="4 6"/>
+<rect x="285" y="412" width="190" height="58" rx="10" fill="#0b0b0b" stroke="#ccff00" stroke-width="1.5"/>
+<text x="380" y="437" class="s" font-size="18" font-weight="700" fill="#e8e4dc" text-anchor="middle">Vault</text>
+<text x="380" y="459" class="s" font-size="13" font-weight="400" fill="#9a9b9e" text-anchor="middle">DB secrets engine</text>
+<line x1="380" y1="470" x2="380" y2="999" stroke="#3a3a3a" stroke-width="2" stroke-dasharray="4 6"/>
+<rect x="535" y="412" width="190" height="58" rx="10" fill="#0b0b0b" stroke="#3a3a3a" stroke-width="1.5"/>
+<text x="630" y="437" class="s" font-size="18" font-weight="700" fill="#e8e4dc" text-anchor="middle">PostgreSQL</text>
+<text x="630" y="459" class="s" font-size="13" font-weight="400" fill="#9a9b9e" text-anchor="middle">database</text>
+<line x1="630" y1="470" x2="630" y2="999" stroke="#3a3a3a" stroke-width="2" stroke-dasharray="4 6"/>
+<line x1="140" y1="518" x2="366" y2="518" stroke="#e8e4dc" stroke-width="2.2"/>
+<path d="M376,518 l-14,-7 v14 z" fill="#e8e4dc"/>
+<text x="267.0" y="500" class="s" font-size="15" font-weight="400" fill="#e8e4dc" text-anchor="middle">Log in (AppRole, K8s, IAM)</text>
+<circle cx="164" cy="518" r="12" fill="#ccff00"/>
+<text x="164" y="524" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">1</text>
+<line x1="370" y1="570" x2="144" y2="570" stroke="#e8e4dc" stroke-width="2.2" stroke-dasharray="7 6"/>
+<path d="M134,570 l14,-7 v14 z" fill="#e8e4dc"/>
+<text x="243.0" y="552" class="s" font-size="15" font-weight="400" fill="#e8e4dc" text-anchor="middle">Token, scoped by policy</text>
+<circle cx="346" cy="570" r="12" fill="#ccff00"/>
+<text x="346" y="576" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">2</text>
+<line x1="140" y1="622" x2="366" y2="622" stroke="#e8e4dc" stroke-width="2.2"/>
+<path d="M376,622 l-14,-7 v14 z" fill="#e8e4dc"/>
+<text x="267.0" y="604" class="s" font-size="15" font-weight="400" fill="#e8e4dc" text-anchor="middle">Read creds/app-readonly</text>
+<circle cx="164" cy="622" r="12" fill="#ccff00"/>
+<text x="164" y="628" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">3</text>
+<line x1="390" y1="674" x2="616" y2="674" stroke="#e8e4dc" stroke-width="2.2"/>
+<path d="M626,674 l-14,-7 v14 z" fill="#e8e4dc"/>
+<text x="517.0" y="656" class="s" font-size="15" font-weight="400" fill="#e8e4dc" text-anchor="middle">CREATE ROLE (with expiry)</text>
+<circle cx="414" cy="674" r="12" fill="#ccff00"/>
+<text x="414" y="680" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">4</text>
+<line x1="370" y1="726" x2="144" y2="726" stroke="#e8e4dc" stroke-width="2.2" stroke-dasharray="7 6"/>
+<path d="M134,726 l14,-7 v14 z" fill="#e8e4dc"/>
+<text x="243.0" y="708" class="s" font-size="15" font-weight="400" fill="#e8e4dc" text-anchor="middle">User + password, TTL 1h</text>
+<circle cx="346" cy="726" r="12" fill="#ccff00"/>
+<text x="346" y="732" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">5</text>
+<line x1="140" y1="778" x2="616" y2="778" stroke="#e8e4dc" stroke-width="2.2"/>
+<path d="M626,778 l-14,-7 v14 z" fill="#e8e4dc"/>
+<text x="392.0" y="760" class="s" font-size="15" font-weight="400" fill="#e8e4dc" text-anchor="middle">Connect with short-lived credentials</text>
+<circle cx="164" cy="778" r="12" fill="#ccff00"/>
+<text x="164" y="784" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">6</text>
+<rect x="36" y="816" width="688" height="180" rx="8" fill="none" stroke="#3a3a3a" stroke-width="1.5"/>
+<rect x="36" y="816" width="118" height="28" rx="8" fill="#ccff00" stroke="#ccff00" stroke-width="1.5"/>
+<text x="95" y="835" class="s" font-size="13" font-weight="700" fill="#0b0b0b" text-anchor="middle">LIFECYCLE</text>
+<text x="166" y="835" class="s" font-size="14" font-weight="600" fill="#9a9b9e" text-anchor="start">While the app keeps running</text>
+<line x1="140" y1="880" x2="366" y2="880" stroke="#e8e4dc" stroke-width="2.2"/>
+<path d="M376,880 l-14,-7 v14 z" fill="#e8e4dc"/>
+<text x="267.0" y="862" class="s" font-size="15" font-weight="400" fill="#e8e4dc" text-anchor="middle">Renew lease (to max_ttl)</text>
+<circle cx="164" cy="880" r="12" fill="#ccff00"/>
+<text x="164" y="886" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">7</text>
+<line x1="36" y1="908" x2="724" y2="908" stroke="#3a3a3a" stroke-width="1.5" stroke-dasharray="6 6"/>
+<text x="52" y="934" class="s" font-size="14" font-weight="600" fill="#9a9b9e" text-anchor="start">When the lease expires or is revoked</text>
+<line x1="390" y1="976" x2="616" y2="976" stroke="#ccff00" stroke-width="2.2"/>
+<path d="M626,976 l-14,-7 v14 z" fill="#ccff00"/>
+<text x="517.0" y="958" class="s" font-size="15" font-weight="400" fill="#e8e4dc" text-anchor="middle">DROP ROLE: login is dead</text>
+<circle cx="414" cy="976" r="12" fill="#ccff00"/>
+<text x="414" y="982" class="s" font-size="16" font-weight="700" fill="#0b0b0b" text-anchor="middle">8</text>
+</svg>
