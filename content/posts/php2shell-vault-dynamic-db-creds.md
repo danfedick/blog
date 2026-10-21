@@ -155,7 +155,7 @@ Short-lived credentials limit the damage after a break-in. You still want to sto
 
 There are many options for the scanning itself. Commercial platforms include [Wiz](https://www.wiz.io/), [Palo Alto Networks Prisma Cloud](https://www.paloaltonetworks.com/prisma/cloud), [Tenable](https://www.tenable.com/products/vulnerability-management) and [Qualys](https://www.qualys.com/apps/vulnerability-management-detection-response/). On the open-source side, [Syft](https://github.com/anchore/syft) generates SBOMs, and [Grype](https://github.com/anchore/grype) and [Trivy](https://trivy.dev/) scan images and filesystems for known vulnerabilities. If your developers already use OpenAI's Codex, [Codex Security](https://help.openai.com/en/articles/20001107-codex-security) (a research preview on some ChatGPT plans) connects to GitHub repos, scans the code or individual commits, tries to confirm each finding in an isolated environment, and suggests patches for a person to review.
 
-## AI-driven vulnerability discovery
+## How to use AI to find vulnerabilities
 
 In its [Patch the Planet post](https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/), OpenAI says the security firm Calif found one of the flaws using an OpenAI model, and Wiz independently found and reported both. PHP's maintainers led the fix. OpenAI, Wiz, Cloudflare and others helped test patches and prepare protections, such as firewall rules, before the details went public. OpenAI says it believes AI found these bugs before attackers did, which gave defenders time to get ready. It also warns that the same models can help attackers build exploits quickly, and that it expects findings like this to "increase sharply in the coming months."
 
