@@ -8,7 +8,7 @@ tags: ["secrets", "vault", "zero-trust", "php", "cve", "dynamic-credentials", "s
 
 ## The PHP2Shell vulnerabilities
 
-Today the FBI Cyber Division [posted on X](https://x.com/FBICyberDiv/status/2112921648252719420) that two critical vulnerabilities have been found in PHP, "a widely used programming language that powers websites and web applications." The FBI says the flaws, CVE-2026-109618 and CVE-2026-109619, "could allow malicious cyber actors to remotely execute code in PHP core."
+On October 21, the FBI Cyber Division [posted on X](https://x.com/FBICyberDiv/status/2112921648252719420) that two critical vulnerabilities have been found in PHP, "a widely used programming language that powers websites and web applications." The FBI says the flaws, CVE-2026-109618 and CVE-2026-109619, "could allow malicious cyber actors to remotely execute code in PHP core."
 
 Researchers call the pair **PHP2Shell**. The PHP project gave advance warning on October 20, and public reports that day said the bugs could lead to remote code execution. Fixed releases came out on October 21 at about 10:00 AM ET (14:00 UTC): **8.5.12, 8.4.27, 8.3.36 and 8.2.35**. PHP rates both CVEs 9.2 on CVSS v4.0.
 
@@ -30,7 +30,7 @@ It hasn't changed because changing it is a pain. You update the password in the 
 
 ## Dynamic database credentials
 
-With HashiCorp Vault's [database secrets engine](https://developer.hashicorp.com/vault/docs/secrets/databases), the app works more like a hotel guest than a tenant with a permanent key.
+With HashiCorp Vault's [database secrets engine](https://developer.hashicorp.com/vault/docs/secrets/databases), each app gets its own database login that expires:
 
 1. When the app starts, it proves who it is to Vault, using something like its Kubernetes service account, cloud identity or AppRole.
 2. Vault creates a new database user just for that app, with only the permissions it needs.
@@ -157,15 +157,24 @@ There are many options for the scanning itself. Commercial platforms include [Wi
 
 ## How to use AI to find vulnerabilities
 
-In its [Patch the Planet post](https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/), OpenAI says the security firm Calif found one of the flaws using an OpenAI model, and Wiz independently found and reported both. PHP's maintainers led the fix. OpenAI, Wiz, Cloudflare and others helped test patches and prepare protections, such as firewall rules, before the details went public. OpenAI says it believes AI found these bugs before attackers did, which gave defenders time to get ready. It also warns that the same models can help attackers build exploits quickly, and that it expects findings like this to "increase sharply in the coming months."
+AI models found these bugs. In its [Patch the Planet post](https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/), OpenAI says the security firm Calif found one of the flaws using an OpenAI model, and Wiz independently found and reported both. OpenAI also warns that the same models can help attackers build exploits quickly, and it expects findings like this to "increase sharply in the coming months." Your own code and dependencies are worth running through the same kind of tools before someone else does.
 
-The post proposes a way to handle disclosure at that pace. Maintainers and researchers confirm and fix the bug first. Then distributors, hosting providers and security vendors get early notice so their updates are ready. Government agencies such as CISA help the warning reach critical services. Public guidance goes out once a patch exists. OpenAI also published an open-source [PHP version checker](https://github.com/openai/php2shell-checker). You can run it with Node against a URL or a server's local PHP, or install it as a Codex skill. It only reads the version a server reports, so a hidden version comes back as unknown, not safe. OpenAI is also offering subsidized access to [Daybreak](https://openai.com/daybreak/), its program that gives vetted defenders AI models for security work, to under-resourced teams that protect essential services.
+A few places where AI helps a defending team:
 
-My takeaway for operators: if bugs are found and disclosed faster, the time between "patch released" and "exploit in the wild" gets shorter. That's another reason to keep an inventory you can search and credentials that expire on their own.
+- **Review pull requests.** Have an AI reviewer read each PR for injection, unsafe deserialization, missing auth checks and similar bugs, and have a person decide what to fix. Codex Security, covered above, scans repos or individual commits, tries to confirm each finding in an isolated environment, and suggests patches for review.
+- **Triage scanner and SBOM output.** Scanners produce long lists. Ask a model to group findings, point out which vulnerable functions your code actually calls, and draft the upgrade or rebuild steps.
+- **Write fuzz harnesses.** Models are good at writing the boring glue code a fuzzer needs. Point them at your parsers and request handlers first, since that's where untrusted input lands.
+- **Look for hardcoded secrets.** Ask the model to flag passwords, tokens and connection strings in config files, `.env` files and old commits, then move what it finds into Vault and rotate it.
+
+For PHP2Shell specifically, OpenAI published an open-source [PHP version checker](https://github.com/openai/php2shell-checker). You can run it with Node against a URL or a server's local PHP, or install it as a Codex skill. It only reads the version a server reports, so a hidden version comes back as unknown, not safe.
+
+If your team protects essential services and doesn't have the budget, OpenAI is offering subsidized access to [Daybreak](https://openai.com/daybreak/), its program that gives vetted defenders AI models for security work.
+
+Faster discovery also shortens the time between "patch released" and "exploit in the wild," which is one more reason to keep an inventory you can search and credentials that expire on their own.
 
 ## Software inventory and SBOMs
 
-When something like PHP2Shell lands, the first question is "where do we run PHP, and which version?" If answering takes a week of emails, the attackers are ahead of you.
+For a bug like PHP2Shell, the first question is "where do we run PHP, and which version?" If answering takes a week of emails, attackers have that week too.
 
 PHP hides in more places than people expect: the main web app, an old WordPress marketing site, an internal wiki, a vendor appliance, a forgotten VM in a dev account. CERT-EU points out that many commercial products embed PHP even when they don't expose it directly, and suggests the [NCSC-NL php2shell list](https://github.com/NCSC-NL/php2shell) to find them.
 
@@ -173,11 +182,9 @@ If you keep a live inventory of what's deployed (SBOMs for every image and build
 
 ## Harvest now, decrypt later
 
-This is the same problem stretched over years instead of days.
-
 Attackers can record encrypted traffic and stolen encrypted data today, even though they can't read it yet. They store it and wait. Once a large enough quantum computer exists, the public-key math protecting much of today's traffic could be broken, and the recordings become readable. NIST [describes this](https://www.nist.gov/cybersecurity/what-post-quantum-cryptography) as "harvest now, decrypt later," and it's one reason NIST, NSA and [CISA](https://www.cisa.gov/quantum) are pushing organizations to plan their post-quantum move now.
 
-Long-lived secrets make that worse. If a recording contains a database password that's still valid five years from now, it's worth decrypting. A credential that expired an hour after it was issued isn't worth anything when the recording is finally cracked. The same goes for a config file stolen this week through PHP2Shell: a static password is worth something for as long as nobody changes it.
+Long-lived secrets make harvest now, decrypt later worse. If a recording contains a database password that's still valid five years from now, it's worth decrypting. A credential that expired an hour after it was issued isn't worth anything when the recording is finally cracked. The same goes for a config file stolen this week through PHP2Shell: a static password is worth something for as long as nobody changes it.
 
 Dynamic credentials don't protect the data itself, though. Customer records in that recorded traffic stay sensitive no matter how short the credential's life was. Protecting that data means moving key exchange to post-quantum algorithms such as ML-KEM, which NIST standardized in [FIPS 203](https://csrc.nist.gov/pubs/fips/203/final), often in a hybrid with today's algorithms during the transition. Short-lived credentials shrink how long a stolen secret stays useful, and post-quantum key exchange protects what's inside the traffic, so you need both.
 
@@ -185,7 +192,7 @@ Dynamic credentials don't protect the data itself, though. Customer records in t
 
 Patch PHP to 8.5.12, 8.4.27, 8.3.36 or 8.2.35, then rotate any long-lived secret a vulnerable server could read.
 
-After that, start moving apps off static, long-lived credentials. Give each app a short-lived credential from Vault. Let it expire by time, kill it with one command when you need to, and let the app pick up a fresh one when it restarts. The next time a web server gets popped, the attacker leaves with a password that's about to stop working.
+After that, start moving apps off static, long-lived credentials. Give each app a short-lived credential from Vault. Let it expire by time, kill it with one command when you need to, and let the app pick up a fresh one when it restarts. Then a compromised web server only gives up passwords that are about to expire.
 
 ---
 
