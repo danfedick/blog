@@ -14,6 +14,8 @@ Researchers call the pair **PHP2Shell**. The PHP project gave advance warning on
 
 Any PHP install that serves web requests is affected, including PHP-FPM, Apache with mod_php, php-cgi, FrankenPHP and LiteSpeed. The PHP team says mod_php is the riskiest setup, with a demonstrated exploit where one unauthenticated request starts the attack before any application code runs. Code runs with the rights of the web worker account. Proof-of-concept code is circulating, and Cloudflare said it was already seeing early attacks before the patches shipped. PHP 8.1 and older no longer get updates from the PHP project, though the team published minimal source backports for 7.4, 8.0 and 8.1.
 
+{{< figure src="/images/php2shell-what-happened.svg" alt="PHP2Shell attack path: an attacker sends one unauthenticated HTTP request, a PHP core flaw (CVE-2026-109618 or CVE-2026-109619, CVSS v4.0 9.2) lets it run code, the attacker gets remote code execution on the web server, then reads config files and secrets and reaches the database. Fix: update to PHP 8.5.12, 8.4.27, 8.3.36 or 8.2.35, released October 21 at about 10:00 AM ET." caption="One unauthenticated request can end with your database password in someone else's hands." >}}
+
 Sources: [BleepingComputer](https://www.bleepingcomputer.com/news/security/php-ships-emergency-patches-for-critical-php2shell-flaws/), [CERT-EU advisory 2026-018](https://cert.europa.eu/publications/security-advisories/2026-018), and the [PHP project announcement](https://www.php.net/archive/2026.php#2026-10-20-1).
 
 Patch now. The PHP team says there are no complete mitigations and updating is the only safe choice. Patching also does nothing about whatever an attacker already copied off the box.
