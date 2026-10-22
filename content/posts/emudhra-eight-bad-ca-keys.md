@@ -1,5 +1,5 @@
 ---
-title: "Eight Bad CA Keys and the Trust Store You Forgot"
+title: "TLS X.509 Error. Assume Chaos."
 date: 2026-10-22
 draft: false
 description: "eMudhra generated eight intermediate CA keys so weakly that anyone could recover them. Browsers blocked them within hours, but curl, Java, Python and CI pipelines kept trusting them. How to check your trust stores and make cert rotation boring with Vault."
